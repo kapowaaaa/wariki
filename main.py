@@ -1,6 +1,6 @@
 import random
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
