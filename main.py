@@ -18,10 +18,10 @@ class MainWindow(QMainWindow):
             balls_field.append(row_list)
 
         self.setWindowTitle("Bubble Shooter")
-        self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(0, 0, 1920, 1080)
 
         self.tableWidget = QTableWidget(self)
-        self.tableWidget.setGeometry(50, 50, 300, 200)
+        self.tableWidget.setGeometry(0, 0, 1920, 1080)
         self.tableWidget.setRowCount(row)
         self.tableWidget.setColumnCount(column)
 
