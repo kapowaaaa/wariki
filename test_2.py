@@ -1,41 +1,48 @@
-import random
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtGui import QColor
+import random
 
-class MainWindow(QMainWindow):
-    def __init__(self):
+row = 5
+column = 11
+balls_field = []
+x = 0
+y = 0
+cell_diameter = 50
+
+for i in range(row):
+    row_list = []
+    for j in range(column):
+        color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
+        cell = [x, y, color]
+        x += cell_diameter
+        row_list.append(cell)
+    balls_field.append(row_list)
+    x = 0
+    y += cell_diameter
+
+class GameWindow(QMainWindow):
+    def __init__(self, row):
         super().__init__()
 
-        rows = 5
-        columns = 11
+        self.row = row
 
-        ball_images = ["ball1.png", "ball2.png", "ball3.png"]  # Замените на фактические имена файлов изображений шариков
+        self.setWindowTitle("My Game")
+        self.setGeometry(100, 100, 800, 600)
 
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.game_field = QLabel(self)
+        self.game_field.setGeometry(50, 50, column*cell_diameter, self.row*cell_diameter)
+        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
 
-        vertical_layout = QHBoxLayout()  # Создание вертикального макета
+        for row in balls_field:
+            for cell in row:
+                x, y, color = cell
+                ball_label = QLabel( self.game_field)  # Using the given element
+                ball_label.setGeometry(x, y, cell_diameter, cell_diameter)
+                ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {cell_diameter//2}px; border: 1px solid black;")
 
-        for i in range(rows):
-            horizontal_layout = QHBoxLayout()  # Создание горизонтального макета для каждой строки
-            for j in range(columns):
-                ball_label = QLabel()
-                ball_index = random.randint(0, 2)  # Генерация случайного индекса изображения шарика
-                pixmap = QPixmap(ball_images[ball_index])
-                pixmap = pixmap.scaled(20, 20)  # Изменение размера изображения на 200x200 пикселей
-                ball_label.setPixmap(pixmap)
-                horizontal_layout.addWidget(ball_label)
-
-            vertical_layout.addLayout(horizontal_layout)  # Добавление горизонтального макета в вертикальный макет
-
-        central_widget.setLayout(vertical_layout)
-
-        self.setWindowTitle("Bube Shooter")
-        self.setGeometry(0, 0, 500, 500)
-        self.show()
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = GameWindow(row)
+    window.show()
     sys.exit(app.exec_())
