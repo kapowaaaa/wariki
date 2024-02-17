@@ -65,6 +65,10 @@ class GameWindow(QMainWindow):
             ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {120//2}px; border: 1px solid black;")
             ball_label.color = color
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = GameWindow()
