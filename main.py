@@ -4,12 +4,12 @@ from PyQt5.QtGui import QColor, QPainter, QBrush
 from PyQt5.QtCore import Qt
 import random
 
-row = 10
-column = 22
+row = 5
+column = 11
 balls_field = []
 x = 0
 y = 0
-cell_diameter = 80
+cell_diameter =120
 
 for i in range(row):
     row_list = []

@@ -1,48 +1,72 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPainter, QBrush
+from PyQt5.QtCore import Qt
 import random
 
-row = 5
+total_rows = 5
 column = 11
 balls_field = []
 x = 0
 y = 0
-cell_diameter = 50
 
-for i in range(row):
+for i in range(total_rows):
+    if i % 2 == 0:
+        x = 0
+    else:
+        x = 60
     row_list = []
     for j in range(column):
-        color = random.randint(1, 3)
+        color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
         cell = [x, y, color]
-        x += cell_diameter
+        x += 120
         row_list.append(cell)
     balls_field.append(row_list)
-    x = 0
-    y += cell_diameter
+    y += 103
 
 class GameWindow(QMainWindow):
-    def __init__(self, row):
+    def __init__(self):
         super().__init__()
 
-        self.row = row
+        self.row = total_rows
+        self.shooter_angle = -45
 
-        self.setWindowTitle("My Game")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("Bubble Shooter Game")
+        self.setGeometry(0, 0, 1920, 1080)
 
         self.game_field = QLabel(self)
-        self.game_field.setGeometry(50, 50, column*cell_diameter, self.row*cell_diameter)
+        self.game_field.setGeometry(50, 50, column*120, self.row*120)
         self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
 
         for row in balls_field:
             for cell in row:
                 x, y, color = cell
                 ball_label = QLabel(self.game_field)
-                ball_label.setGeometry(x, y, cell_diameter, cell_diameter)
-                ball_label.setStyleSheet(f"background-color: {QColor(color*85, color*85, color*85).name()}; border-radius: {cell_diameter//2}px; border: 1px solid black;")
+                ball_label.setGeometry(x, y, 120, 120)
+                ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {120//2}px; border: 1px solid black;")
+                ball_label.color = color
+
+        self.shooter = QLabel(self)
+        self.shooter.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
+        self.shooter.setStyleSheet("background-color: gray; border-radius: 45px; border: 1px solid black;")
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(Qt.black)
+        painter.setBrush(QBrush(Qt.gray))
+        painter.drawRect(960 - 120 // 4, 930 - 120 // 4, 120 // 2, 120)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            # Shoot a random color ball from the shooter
+            color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])
+            ball_label = QLabel(self.game_field)
+            ball_label.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
+            ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {120//2}px; border: 1px solid black;")
+            ball_label.color = color
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = GameWindow(row)
+    window = GameWindow()
     window.show()
     sys.exit(app.exec_())
