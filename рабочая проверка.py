@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 import random
 
 total_rows = 5
-column = 11
+column = 15
 balls_field = []
 x = 0
 y = 0
@@ -35,7 +35,7 @@ class GameWindow(QMainWindow):
         self.setGeometry(0, 0, 1920, 1080)
 
         self.game_field = QLabel(self)
-        self.game_field.setGeometry(50, 50, column*120, self.row*120)
+        self.game_field.setGeometry(0, 0, column*175, self.row*150)
         self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
 
         for row in balls_field:
