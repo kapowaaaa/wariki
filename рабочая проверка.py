@@ -31,7 +31,7 @@ class GameWindow(QMainWindow):
         super().__init__()
 
         self.row = total_rows
-        self.shooter_angle = -45
+        self.shooter_angle = 180
 
         self.setWindowTitle("Bubble Shooter Game")
         self.setGeometry(0, 0, 1920, 1080)
@@ -61,7 +61,7 @@ class GameWindow(QMainWindow):
         painter.setBrush(QBrush(Qt.gray))
         painter.save()
         painter.translate(960, 930)
-        painter.rotate(self.shooter_angle)
+        painter.rotate(self.shooter_angle)  # Correct the angle
         painter.drawRect(-120 // 4, -120 // 4, 120 // 2, 120)
         painter.restore()
 
@@ -92,4 +92,3 @@ if __name__ == '__main__':
     window = GameWindow()
     window.show()
     sys.exit(app.exec_())
-
