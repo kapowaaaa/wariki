@@ -36,7 +36,7 @@ class GameWindow(QMainWindow):
 
         self.game_field = QLabel(self)
         self.game_field.setGeometry(0, 0, column*175, self.row*150)
-        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
+        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") #сцена
 
         for row in balls_field:
             for cell in row:
