@@ -37,7 +37,7 @@ class GameWindow(QMainWindow):
         self.setGeometry(0, 0, 1920, 1080)
 
         self.game_field = QLabel(self)
-        self.game_field.setGeometry(0, 0, column * 175, self.row * 150)
+        self.game_field.setGeometry(0, 0, 1920, 1080)
         self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
 
         for row in balls_field:
@@ -58,7 +58,7 @@ class GameWindow(QMainWindow):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(Qt.black)
-        painter.setBrush(QBrush(Qt.gray))
+        painter.setBrush(QBrush(Qt.black))
         painter.save()
         painter.translate(960, 930)
         painter.rotate(self.shooter_angle)  # Correct the angle
