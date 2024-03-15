@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt5.QtGui import QColor, QPainter, QBrush
 from PyQt5.QtCore import Qt
 import random
@@ -25,7 +25,6 @@ for i in range(total_rows):
     balls_field.append(row_list)
     y += 103
 
-
 class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -40,6 +39,7 @@ class GameWindow(QMainWindow):
         self.game_field.setGeometry(0, 0, column*175, self.row*150)
         self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") #сцена
         self.game_field.setGeometry(0, 0, column * 175, self.row * 150)
+        self.game_field.setGeometry(0, 0, 1920, 1080)
         self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
 
         for row in balls_field:
@@ -60,11 +60,12 @@ class GameWindow(QMainWindow):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(Qt.black)
-        painter.setBrush(QBrush(Qt.gray))
+        painter.setBrush(QBrush(Qt.black))
         painter.save()
-        painter.translate(960, 930)
-        painter.rotate(self.shooter_angle)  # Correct the angle
-        painter.drawRect(-120 // 4, -120 // 4, 120 // 2, 120)
+        painter.translate(self.width() / 2,
+                          self.height() - 30)
+        painter.rotate(self.shooter_angle)
+        painter.drawRect(-15, -60, 30, 60)
         painter.restore()
 
     def mouseMoveEvent(self, event):
@@ -76,7 +77,6 @@ class GameWindow(QMainWindow):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            # Shoot a random color ball from the shooter
             color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])
             ball_label = QLabel(self.game_field)
             ball_label.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
@@ -88,9 +88,34 @@ class GameWindow(QMainWindow):
         if event.key() == Qt.Key_Escape:
             self.close()
 
+class StartWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Bubble Shooter Game")
+        self.setGeometry(0, 0, 1920, 1080)
+
+        start_button = QPushButton("Начать игру", self)
+        start_button.setGeometry(960, 540, 100, 50)
+        start_button.clicked.connect(self.start_game)
+
+        exit_button = QPushButton("Выйти", self)
+        exit_button.setGeometry(0, 0, 100, 50)
+        exit_button.clicked.connect(self.close)
+
+    def start_game(self):
+        self.game_window = GameWindow()
+        self.game_window.show()
+        self.close()
+
+    def start_game(self):
+        self.game_window = GameWindow()
+        self.game_window.show()
+        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = GameWindow()
-    window.show()
+    start_window = StartWindow()
+    start_window.show()
     sys.exit(app.exec_())
+
