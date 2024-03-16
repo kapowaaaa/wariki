@@ -36,11 +36,11 @@ class GameWindow(QMainWindow):
         self.setGeometry(0, 0, 1920, 1080)
 
         self.game_field = QLabel(self)
-        self.game_field.setGeometry(0, 0, column*175, self.row*150)
-        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") #сцена
+        # self.game_field.setGeometry(0, 0, column*175, self.row*150)
+        # self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") #сцена
         self.game_field.setGeometry(0, 0, column * 175, self.row * 150)
-        self.game_field.setGeometry(0, 0, 1920, 1080)
-        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
+        # self.game_field.setGeometry(0, 0, 1920, 1080)
+        # self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") какаято ересь ненужная
 
         for row in balls_field:
             for cell in row:
@@ -52,7 +52,7 @@ class GameWindow(QMainWindow):
                 ball_label.color = color
 
         self.shooter = QLabel(self)
-        self.shooter.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
+        self.shooter.setGeometry(960 - 120 // 2, 930 - 120 // 2, 100, 100)
         self.shooter.setStyleSheet("background-color: gray; border-radius: 45px; border: 1px solid black;")
 
         self.setMouseTracking(True)  # Enable mouse tracking
@@ -103,15 +103,11 @@ class StartWindow(QMainWindow):
         exit_button.setGeometry(0, 0, 100, 50)
         exit_button.clicked.connect(self.close)
 
-    def start_game(self):
-        self.game_window = GameWindow()
-        self.game_window.show()
-        self.close()
 
     def start_game(self):
+        self.close()
         self.game_window = GameWindow()
         self.game_window.show()
-        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

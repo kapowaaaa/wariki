@@ -34,9 +34,6 @@ class GameWindow(QMainWindow):
         self.setWindowTitle("Bubble Shooter Game")
         self.setGeometry(0, 0, column*175, self.row*150)
 
-        self.start_button = QPushButton('Начать игру', self)
-        self.start_button.setGeometry(800, 50, 150, 50)
-        self.start_button.clicked.connect(self.start_game)
 
     def start_game(self):
         self.game_field = QLabel(self)
