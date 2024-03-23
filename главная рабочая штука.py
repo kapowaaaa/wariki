@@ -21,9 +21,9 @@ class GameWindow(QMainWindow):
         x = 0
         y = 0
 
-        # screen_width = self.size().width()
-        # screen_height = self.size().height()
-        print(screen_width, screen_height)
+        screen_width = self.size().width()
+        screen_height = self.size().height()
+        # print(screen_width, screen_height)
 
         self.ball_size = min(screen_width // column, screen_height // total_rows)
 
