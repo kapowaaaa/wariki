@@ -107,8 +107,9 @@ class StartWindow(QMainWindow):
 
         global screen_width, screen_height
 
-        screen_width = self.size().width()
-        screen_height = self.size().height()
+        screen_geometry = QApplication.desktop().availableGeometry()
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height() # поменял, тепреь растягивается норсм но код не рабоатет
 
         self.setWindowTitle("Bubble Shooter Game")
         self.setGeometry(0, 0, screen_width, screen_height)
@@ -122,8 +123,15 @@ class StartWindow(QMainWindow):
         exit_button.clicked.connect(self.close)
 
     def start_game(self):
+        #self.game_window = GameWindow()
+        self.game_window.setGeometry(0, 0, screen_width, screen_height)
+        self.game_window.ball_size = min(screen_width // self.game_window.row, screen_height // self.game_window.column)
+        self.game_window.shooter.setGeometry(screen_width // 2 - self.game_window.ball_size // 2,
+                                             screen_height - self.game_window.ball_size // 2,
+                                             self.game_window.ball_size // 2, self.game_window.ball_size // 2)
+
         self.close()
-        self.game_window = GameWindow()
+
         # self.game_window.showMaximized()
 
 
