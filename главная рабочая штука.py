@@ -11,6 +11,8 @@ screen_width, screen_height = 0, 0
 class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        screen_geometry = QApplication.desktop().availableGeometry() # доп шняга добавлена теперь растянуто норм
+        self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
 
         global screen_width, screen_height
         screen_width = self.size().width()
@@ -20,13 +22,13 @@ class GameWindow(QMainWindow):
         self.setWindowTitle("Bubble Shooter Game")
         # self.setGeometry(0, 0, screen_width, screen_height)
 
-        total_rows = 5
-        column = 16
+        total_rows = 8
+        column = 25
         balls_field = []
 
         self.x_pos = 0
         self.y_pos = 0
-
+        global ball_size
         self.ball_size = min(screen_width // column, screen_width // column)
 
         for i in range(total_rows):
