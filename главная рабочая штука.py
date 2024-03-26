@@ -56,34 +56,34 @@ class GameWindow(QMainWindow):
                                      f"border: 1px solid black;")
             # ball_label.color = color
 
-        # self.row = total_rows
-        # self.shooter_angle = 180
+        self.row = total_rows
+        self.shooter_angle = 270
 
-        # self.shooter = QLabel(self)
-        # self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2, screen_height - self.ball_size // 2,
-        #                          self.ball_size // 2,
-        #                          self.ball_size // 2)
-        # self.shooter.setStyleSheet("background-color: gray; border-radius: 45px; border: 1px solid black;")
-        #
-        # self.setMouseTracking(True)  # Enable mouse tracking
+        self.shooter = QLabel(self)
+        self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2, screen_height - self.ball_size*1.5,  # серая херня снизу
+                                 100,
+                                 100)
+        self.shooter.setStyleSheet("background-color: gray; border-radius: 50px; border: 1px solid black;") # настройка цвета и формы серой херни
+        
+        self.setMouseTracking(True)  # Enable mouse tracking
 
-    # def paintEvent(self, event):
-    #     painter = QPainter(self)
-    #     painter.setPen(Qt.black)
-    #     painter.setBrush(QBrush(Qt.black))
-    #     painter.save()
-    #     painter.translate(self.width() / 2,
-    #                       self.height() - self.ball_size // 2)
-    #     painter.rotate(self.shooter_angle)
-    #     painter.drawRect(-10, -self.ball_size // 2, 30, self.ball_size)
-    #     painter.restore()
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(Qt.black)
+        painter.setBrush(QBrush(Qt.black))
+        painter.save()
+        painter.translate(self.width() //2,
+                          self.height() - self.ball_size)
+        painter.rotate(self.shooter_angle)
+        painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2)
+        painter.restore()
 
-    # def mouseMoveEvent(self, event):
-    #     dx = event.x() - screen_width // 2
-    #     dy = event.y() - screen_height
-    #     angle = math.degrees(math.atan2(dy, dx))
-    #     self.shooter_angle = angle
-    #     self.update()
+    def mouseMoveEvent(self, event): # возможно стоит сделать поверх всех окон
+        dx = event.x() - screen_width 
+        dy = event.y() - screen_height 
+        angle = math.degrees(math.atan2(dy, dx))
+        self.shooter_angle = angle
+        self.update()
 
     # def mousePressEvent(self, event):
     #     if event.button() == Qt.LeftButton:
