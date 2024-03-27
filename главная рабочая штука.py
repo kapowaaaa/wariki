@@ -57,7 +57,7 @@ class GameWindow(QMainWindow):
             # ball_label.color = color
 
         self.row = total_rows
-        self.shooter_angle = 270
+        self.shooter_angle = 270 # уголлл
 
         self.shooter = QLabel(self)
         self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2, screen_height - self.ball_size*1.5,  # серая херня снизу
