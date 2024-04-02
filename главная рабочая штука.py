@@ -18,8 +18,12 @@ class GameWindow(QMainWindow):
         screen_width = self.size().width()
         screen_height = self.size().height()
         print(screen_width, screen_height)
+        self.current_ball = None
+        self.shooting_angle = 90
+        self.shooting_power = 10
 
-        self.setWindowTitle("Bubble Shooter Game")
+
+        self.setWindowTitle("Шарики")
         # self.setGeometry(0, 0, screen_width, screen_height)
 
         total_rows = 8
@@ -67,7 +71,7 @@ class GameWindow(QMainWindow):
         
         self.setMouseTracking(True)  # Enable mouse tracking
 
-    def paintEvent(self, event):
+    def paintEvent(self, event): # шутеррррррррррррррррррррррр
         painter = QPainter(self)
         painter.setPen(Qt.black)
         painter.setBrush(QBrush(Qt.black))
@@ -77,6 +81,10 @@ class GameWindow(QMainWindow):
         painter.rotate(self.shooter_angle)
         painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2)
         painter.restore()
+        if self.current_ball is not None:
+            painter.setBrush(QBrush(QColor(self.current_ball[2])))
+            painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
+
 
     def mouseMoveEvent(self, event): # возможно стоит сделать поверх всех окон
         dx = event.x() - screen_width 
@@ -84,6 +92,19 @@ class GameWindow(QMainWindow):
         angle = math.degrees(math.atan2(dy, dx))
         self.shooter_angle = angle
         self.update()
+        if event.button() == Qt.LeftButton:
+            if self.current_ball is None:
+                self.current_ball = [screen_width // 2 - self.ball_size // 2,
+                                     screen_height - self.ball_size * 1.5, 'blue']  # Пример цвета шара (желтый)
+    def update_shooting_ball(self):
+        if self.current_ball is not None:
+            dx = math.cos(math.radians(self.shooting_angle)) * self.shooting_power
+            dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
+            self.current_ball[0] += dx
+            self.current_ball[1] -= dy
+            self.update()
+
+
 
     # def mousePressEvent(self, event):
     #     if event.button() == Qt.LeftButton:
@@ -100,6 +121,11 @@ class GameWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
+    
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Space:
+            self.update_shooting_ball()
+
 
 
 class StartWindow(QMainWindow):
@@ -119,7 +145,7 @@ class StartWindow(QMainWindow):
 
 
         self.setWindowTitle("Bubble Shooter Game")
-        # self.setGeometry(0, 0, screen_width, screen_height)
+        self.setGeometry(0, 0, screen_width, screen_height)
 
         start_button = QPushButton("Начать игру", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 - 25, 100, 50)
