@@ -46,6 +46,9 @@ class GameWindow(QMainWindow):
                 cell = [self.x_pos, self.y_pos, color]
                 balls_field.append(cell)
                 self.x_pos += self.ball_size
+            if j % 2 == 0:  # Add this condition to exclude the last element in every second row
+                balls_field.pop()  # Remove the last element in the list
+
             self.y_pos += round(self.ball_size / 1.15)
 
         self.game_field = QLabel(self)
