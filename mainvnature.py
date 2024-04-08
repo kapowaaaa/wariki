@@ -109,24 +109,18 @@ class GameWindow(QMainWindow):
 
 
 
-    # def mousePressEvent(self, event):
-    #     if event.button() == Qt.LeftButton:
-    #         color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])
-    #         ball_label = QLabel(self.game_field)
-    #         ball_label.setGeometry(screen_width // 2 - self.ball_size // 2,
-    #                                screen_height - self.ball_size // 2, self.ball_size,
-    #                                self.ball_size)
-    #         ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); "
-    #                                  f"border-radius: {self.ball_size // 2}px; "
-    #                                  f"border: 1px solid black;")
-    #         ball_label.color = color
+    def mousePressEvent(self, event):
+        # Создаем шар при нажатии левой кнопки мыши
+        if event.button() == Qt.LeftButton and self.current_ball is None:
+            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'blue']
+            self.shooting_angle = -self.shooter_angle  # Угол стрельбы должен быть противоположен углу пушки
+            self.update()
 
     def keyPressEvent(self, event):
+        # Объединяем обработку нажатий клавиш
         if event.key() == Qt.Key_Escape:
             self.close()
-    
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Space:
+        elif event.key() == Qt.Key_Space:
             self.update_shooting_ball()
 
 
