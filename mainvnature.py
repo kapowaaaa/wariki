@@ -13,6 +13,8 @@ class GameWindow(QMainWindow):
         super().__init__()
         screen_geometry = QApplication.desktop().availableGeometry() # доп шняга добавлена теперь растянуто норм
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
+        
+    
 
         global screen_width, screen_height
         screen_width = self.size().width()
@@ -61,6 +63,7 @@ class GameWindow(QMainWindow):
             ball_label.setStyleSheet(f"background-color: {ball[2]}; "
                                      f"border-radius: {self.ball_size // 2}px; "
                                      f"border: 1px solid black;")
+        
             # ball_label.color = color
 
         self.row = total_rows
@@ -89,16 +92,16 @@ class GameWindow(QMainWindow):
             painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
 
 
-    def mouseMoveEvent(self, event): # возможно стоит сделать поверх всех окон
-        dx = event.x() - screen_width 
-        dy = event.y() - screen_height 
-        angle = math.degrees(math.atan2(dy, dx))
-        self.shooter_angle = angle
+    def mouseMoveEvent(self, event):
+    # Рассчитываем угол относительно центра стрелы и курсора мыши
+        dx = event.x() - (self.width() // 2)
+        dy = event.y() - (self.height() - self.ball_size)
+        self.shooter_angle = math.degrees(math.atan2(-dy, dx))  # Угол поворота должен быть отрицательным по оси Y
+
+        # Обновляем окно для отрисовки нового угла стрелы
         self.update()
-        if event.button() == Qt.LeftButton:
-            if self.current_ball is None:
-                self.current_ball = [screen_width // 2 - self.ball_size // 2,
-                                     screen_height - self.ball_size * 1.5, 'blue']  # Пример цвета шара (желтый)
+        print(f"Mouse move: {event.pos()}")
+    
     def update_shooting_ball(self):
         if self.current_ball is not None:
             dx = math.cos(math.radians(self.shooting_angle)) * self.shooting_power
@@ -110,11 +113,13 @@ class GameWindow(QMainWindow):
 
 
     def mousePressEvent(self, event):
-        # Создаем шар при нажатии левой кнопки мыши
         if event.button() == Qt.LeftButton and self.current_ball is None:
             self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'blue']
-            self.shooting_angle = -self.shooter_angle  # Угол стрельбы должен быть противоположен углу пушки
+            # Угол стрельбы должен быть адаптирован для использования в математических расчётах
+            self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
             self.update()
+    
+    
 
     def keyPressEvent(self, event):
         # Объединяем обработку нажатий клавиш
@@ -138,14 +143,18 @@ class StartWindow(QMainWindow):
         self.setWindowTitle("Шарики")
         self.setGeometry(0, 0, screen_width, screen_height)
 
-        start_button = QPushButton("Начать игру", self)
-        start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 - 25, 100, 50)
+        start_button = QPushButton("Start game", self)
+        start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
         start_button.clicked.connect(self.start_game)
+        start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.5, y1:0.0397727, x2:0.886364, y2:1, stop:0.0852273 rgba(185, 255, 118, 241), stop:1 rgba(255, 255, 255, 255));font: 18pt "Old English Text MT";border-radius : 50;')
 
-        exit_button = QPushButton("Выйти", self)
-        exit_button.setGeometry(0, 0, 100, 50)
+        exit_button = QPushButton("Exit", self)
+        exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
-
+        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 18pt "Old English Text MT";border-radius : 25;')
+        
+        game_name = QLabel('Шарики', self)
+        
     def start_game(self):
         self.game_window = GameWindow()
         # self.game_window.setGeometry(0, 0, screen_width, screen_height)
