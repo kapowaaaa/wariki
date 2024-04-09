@@ -142,7 +142,7 @@ class StartWindow(QMainWindow):
         
         self.setWindowTitle("Шарики")
         self.setGeometry(0, 0, screen_width, screen_height)
-        self.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 0, 0, 255), stop:0.339795 rgba(255, 0, 0, 255), stop:0.339799 rgba(255, 255, 255, 255), stop:0.662444 rgba(255, 255, 255, 255), stop:0.662469 rgba(0, 0, 255, 255), stop:1 rgba(0, 0, 255, 255));')
+        self.setStyleSheet('background-color: qlineargradient(spread:reflect, x1:0.506, y1:0.476142, x2:0.506, y2:1, stop:0.0189474 rgba(0, 255, 191, 255), stop:0.76 rgba(0, 137, 123, 255), stop:1 rgba(15, 56, 116, 255));')
 
         start_button = QPushButton("Start game", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
