@@ -113,7 +113,7 @@ class GameWindow(QMainWindow):
 
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton and self.current_ball is None:
+        if event.button() == Qt.LeftButton : # and self.current_ball is None : 
             self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'blue']
             # Угол стрельбы должен быть адаптирован для использования в математических расчётах
             self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
@@ -142,6 +142,7 @@ class StartWindow(QMainWindow):
         
         self.setWindowTitle("Шарики")
         self.setGeometry(0, 0, screen_width, screen_height)
+        self.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 0, 0, 255), stop:0.339795 rgba(255, 0, 0, 255), stop:0.339799 rgba(255, 255, 255, 255), stop:0.662444 rgba(255, 255, 255, 255), stop:0.662469 rgba(0, 0, 255, 255), stop:1 rgba(0, 0, 255, 255));')
 
         start_button = QPushButton("Start game", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
@@ -154,6 +155,12 @@ class StartWindow(QMainWindow):
         exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 18pt "Old English Text MT";border-radius : 25;')
         
         game_name = QLabel('Шарики', self)
+        game_name.setGeometry(screen_width // 2 - 200, screen_height // 2 - 400, 500, 150)
+        game_name.setAlignment(Qt.AlignCenter)
+        game_name.setStyleSheet('background: transparent;font: 72pt "Century Schoolbook";')
+        
+        
+         
         
     def start_game(self):
         self.game_window = GameWindow()
