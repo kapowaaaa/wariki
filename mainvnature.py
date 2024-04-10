@@ -144,12 +144,12 @@ class StartWindow(QMainWindow):
         self.setGeometry(0, 0, screen_width, screen_height)
         self.setStyleSheet('background-color: qlineargradient(spread:reflect, x1:0.506, y1:0.476142, x2:0.506, y2:1, stop:0.0189474 rgba(0, 255, 191, 255), stop:0.76 rgba(0, 137, 123, 255), stop:1 rgba(15, 56, 116, 255));')
 
-        start_button = QPushButton("Start game", self)
+        start_button = QPushButton("Начать игру", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
         start_button.clicked.connect(self.start_game)
         start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.5, y1:0.0397727, x2:0.886364, y2:1, stop:0.0852273 rgba(185, 255, 118, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;')
 
-        exit_button = QPushButton("Exit", self)
+        exit_button = QPushButton("Выйти", self)
         exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
         exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 25;')
