@@ -87,9 +87,9 @@ class GameWindow(QMainWindow):
         painter.rotate(self.shooter_angle)
         painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2)
         painter.restore()
-        if self.current_ball is not None:
-            painter.setBrush(QBrush(QColor(self.current_ball[2])))
-            painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
+        # if self.current_ball is not None:
+        #     painter.setBrush(QBrush(QColor(self.current_ball[2])))
+        #     painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
 
 
     def mouseMoveEvent(self, event):
@@ -147,12 +147,12 @@ class StartWindow(QMainWindow):
         start_button = QPushButton("Start game", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
         start_button.clicked.connect(self.start_game)
-        start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.5, y1:0.0397727, x2:0.886364, y2:1, stop:0.0852273 rgba(185, 255, 118, 241), stop:1 rgba(255, 255, 255, 255));font: 18pt "Old English Text MT";border-radius : 50;')
+        start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.5, y1:0.0397727, x2:0.886364, y2:1, stop:0.0852273 rgba(185, 255, 118, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;')
 
         exit_button = QPushButton("Exit", self)
         exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
-        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 18pt "Old English Text MT";border-radius : 25;')
+        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 25;')
         
         game_name = QLabel('Шарики', self)
         game_name.setGeometry(screen_width // 2 - 200, screen_height // 2 - 400, 500, 150)
