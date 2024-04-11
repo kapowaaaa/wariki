@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt5.QtGui import QColor, QPainter, QBrush
 from PyQt5.QtCore import Qt
+
+
 import random
 import math
 
@@ -14,6 +16,8 @@ class GameWindow(QMainWindow):
         screen_geometry = QApplication.desktop().availableGeometry() # доп шняга добавлена теперь растянуто норм
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
         
+        
+        
     
 
         global screen_width, screen_height
@@ -23,6 +27,7 @@ class GameWindow(QMainWindow):
         self.current_ball = None
         self.shooting_angle = 90
         self.shooting_power = 10
+        self.setMouseTracking(True)
 
 
         self.setWindowTitle("Шарики")
@@ -45,8 +50,8 @@ class GameWindow(QMainWindow):
             for j in range(column):
                 # color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
                 color = random.choice(['red', 'green', 'blue'])  # Randomly choose red, green, or blue
-                cell = [self.x_pos, self.y_pos, color]
-                balls_field.append(cell)
+                ball = [self.x_pos, self.y_pos, color] #хз тут было cell
+                balls_field.append(ball)
                 self.x_pos += self.ball_size
             if (i + 1) % 2 == 0:  # Проверяем, является ли i+1 последним элементом с четным индексом
                 balls_field.pop()  # Удаляем последний элемент из списка balls_field
@@ -55,15 +60,16 @@ class GameWindow(QMainWindow):
 
         self.game_field = QLabel(self)
         self.game_field.setGeometry(0, 0, column * self.ball_size, total_rows * self.ball_size)
-
+#создание поля с шариками
         for ball in balls_field:
+            
             self.x_pos, self.y_pos, color = ball
             ball_label = QLabel(self.game_field)
             ball_label.setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
             ball_label.setStyleSheet(f"background-color: {ball[2]}; "
                                      f"border-radius: {self.ball_size // 2}px; "
                                      f"border: 1px solid black;")
-        
+            
             # ball_label.color = color
 
         self.row = total_rows
@@ -75,7 +81,7 @@ class GameWindow(QMainWindow):
                                  100)
         self.shooter.setStyleSheet("background-color: gray; border-radius: 50px; border: 1px solid black;") # настройка цвета и формы серой херни
         
-        self.setMouseTracking(True)  # Enable mouse tracking
+          # Enable mouse tracking
 
     def paintEvent(self, event): # шутеррррррррррррррррррррррр
         painter = QPainter(self)
@@ -147,12 +153,12 @@ class StartWindow(QMainWindow):
         start_button = QPushButton("Начать игру", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
         start_button.clicked.connect(self.start_game)
-        start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.5, y1:0.0397727, x2:0.886364, y2:1, stop:0.0852273 rgba(185, 255, 118, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;')
+        start_button.setStyleSheet ('background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, 255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;')
 
         exit_button = QPushButton("Выйти", self)
         exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
-        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.931727, y1:0.96, x2:0.0340909, y2:0, stop:0.0852273 rgba(126, 255, 3, 241), stop:1 rgba(255, 255, 255, 255));font: 75 18pt "Century Schoolbook";border-radius : 25;')
+        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, 255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 25;')
         
         game_name = QLabel('Шарики', self)
         game_name.setGeometry(screen_width // 2 - 200, screen_height // 2 - 400, 500, 150)
