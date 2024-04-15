@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QWidget
 from PyQt5.QtGui import QColor, QPainter, QBrush
 from PyQt5.QtCore import Qt
 
@@ -58,14 +58,16 @@ class GameWindow(QMainWindow):
 
             self.y_pos += round(self.ball_size / 1.15)
 
-        self.game_field = QLabel(self)
-        self.game_field.setGeometry(0, 0, column * self.ball_size, total_rows * self.ball_size)
-#создание поля с шариками
+        # self.game_field = QWidget(self)
+        # self.game_field.setGeometry(0, 0, column * self.ball_size, total_rows * self.ball_size)
+        
+        # #создание поля с шариками
         for ball in balls_field:
             
             self.x_pos, self.y_pos, color = ball
-            ball_label = QLabel(self.game_field)
+            ball_label = QLabel(self)
             ball_label.setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
+            ball_label.setMouseTracking(True)
             ball_label.setStyleSheet(f"background-color: {ball[2]}; "
                                      f"border-radius: {self.ball_size // 2}px; "
                                      f"border: 1px solid black;")
@@ -107,6 +109,7 @@ class GameWindow(QMainWindow):
         # Обновляем окно для отрисовки нового угла стрелы
         self.update()
         print(f"Mouse move: {event.pos()}")
+        print(event.x(), event.y())
     
     def update_shooting_ball(self):
         if self.current_ball is not None:
