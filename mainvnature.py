@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QWidget
 from PyQt5.QtGui import QColor, QPainter, QBrush
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 
 import random
@@ -15,6 +16,7 @@ class GameWindow(QMainWindow):
         super().__init__()
         screen_geometry = QApplication.desktop().availableGeometry() # доп шняга добавлена теперь растянуто норм
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
+        self.setupMediaPlayer()
         
         
         
@@ -91,9 +93,9 @@ class GameWindow(QMainWindow):
         painter.setBrush(QBrush(Qt.black))
         painter.save()
         painter.translate(self.width() //2,
-                          self.height() - self.ball_size)
+                          self.height() - self.ball_size) #и эту
         painter.rotate(self.shooter_angle)
-        painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2)
+        painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2) # эту шляпу надо покадрить
         painter.restore()
         # if self.current_ball is not None:
         #     painter.setBrush(QBrush(QColor(self.current_ball[2])))
@@ -137,6 +139,25 @@ class GameWindow(QMainWindow):
         elif event.key() == Qt.Key_Space:
             self.update_shooting_ball()
 
+    def setupMediaPlayer(self):
+        # Инициализация медиаплеера
+        self.player = QMediaPlayer()
+
+        # Загрузка файла: укажите правильный путь к файлу
+        url = QUrl.fromLocalFile("TinyBubbles.mp3")
+        content = QMediaContent(url)
+        self.player.setMedia(content)
+
+        # Подключение сигнала окончания воспроизведения к слоту для повторного воспроизведения
+        self.player.mediaStatusChanged.connect(self.repeatMusic)
+
+        # Начать воспроизведение
+        self.player.play()
+
+    def repeatMusic(self, status):
+        # Проверка, завершилось ли воспроизведение
+        if status == QMediaPlayer.EndOfMedia:
+            self.player.play()
 
 
 class StartWindow(QMainWindow):
@@ -161,7 +182,7 @@ class StartWindow(QMainWindow):
         exit_button = QPushButton("Выйти", self)
         exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
-        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, 255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 25;')
+        exit_button.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, 255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 25; ')
         
         game_name = QLabel('Шарики', self)
         game_name.setGeometry(screen_width // 2 - 200, screen_height // 2 - 400, 500, 150)

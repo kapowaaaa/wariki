@@ -1,78 +1,40 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
-from PyQt5.QtGui import QColor, QPainter, QBrush
-from PyQt5.QtCore import Qt
-import random
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtCore import QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
-total_rows = 5
-column = 15
-balls_field = []
-x = 0
-y = 0
-
-for i in range(total_rows):
-    if i % 2 == 0:
-        x = 0
-    else:
-        x = 60
-    row_list = []
-    for j in range(column):
-        color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
-        cell = [x, y, color]
-        x += 120
-        row_list.append(cell)
-    balls_field.append(row_list)
-    y += 103
-
-class GameWindow(QMainWindow):
+class BackgroundMusicPlayer(QWidget):
     def __init__(self):
         super().__init__()
+        self.initUI()
+        self.setupMediaPlayer()
 
-        self.row = total_rows
-        self.shooter_angle = -45
+    def initUI(self):
+        self.setWindowTitle("Continuous Background Music Player")
+        self.setGeometry(300, 300, 300, 200)
 
-        self.setWindowTitle("Bubble Shooter Game")
-        self.setGeometry(0, 0, column*175, self.row*150)
+    def setupMediaPlayer(self):
+        # Инициализация медиаплеера
+        self.player = QMediaPlayer()
 
+        # Загрузка файла: укажите правильный путь к файлу
+        url = QUrl.fromLocalFile("TinyBubbles.mp3")
+        content = QMediaContent(url)
+        self.player.setMedia(content)
 
-    def start_game(self):
-        self.game_field = QLabel(self)
-        self.game_field.setGeometry(0, 0, column*175, self.row*150)
-        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;") #сцена
+        # Подключение сигнала окончания воспроизведения к слоту для повторного воспроизведения
+        self.player.mediaStatusChanged.connect(self.repeatMusic)
 
-        for row in balls_field:
-            for cell in row:
-                x, y, color = cell
-                ball_label = QLabel(self.game_field)
-                ball_label.setGeometry(x, y, 120, 120)
-                ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {120//2}px; border: 1px solid black;")
-                ball_label.color = color
+        # Начать воспроизведение
+        self.player.play()
 
-        self.shooter = QLabel(self)
-        self.shooter.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
-        self.shooter.setStyleSheet("background-color: gray; border-radius: 45px; border: 1px solid black;")
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setPen(Qt.black)
-        painter.setBrush(QBrush(Qt.gray))
-        painter.drawRect(960 - 120 // 4, 930 - 120 // 4, 120 // 2, 120)
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            # Shoot a random color ball from the shooter
-            color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])
-            ball_label = QLabel(self.game_field)
-            ball_label.setGeometry(960 - 120 // 2, 930 - 120 // 2, 120, 120)
-            ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {120//2}px; border: 1px solid black;")
-            ball_label.color = color
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.close()
+    def repeatMusic(self, status):
+        # Проверка, завершилось ли воспроизведение
+        if status == QMediaPlayer.EndOfMedia:
+            self.player.play()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = GameWindow()
-    window.show()
+    ex = BackgroundMusicPlayer()
+    ex.show()
     sys.exit(app.exec_())
