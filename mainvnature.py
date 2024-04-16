@@ -80,7 +80,7 @@ class GameWindow(QMainWindow):
         self.shooter_angle = 270 # уголлл
 
         self.shooter = QLabel(self)
-        self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2, screen_height - self.ball_size*1.5,  # серая херня снизу
+        self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2 - 10, screen_height - self.ball_size*1.5,  # серая херня снизу
                                  100,
                                  100)
         self.shooter.setStyleSheet("background-color: gray; border-radius: 50px; border: 1px solid black;") # настройка цвета и формы серой херни
@@ -93,9 +93,10 @@ class GameWindow(QMainWindow):
         painter.setBrush(QBrush(Qt.black))
         painter.save()
         painter.translate(self.width() //2,
-                          self.height() - self.ball_size) #и эту
+                         self.height() - self.ball_size // 2) #и эту
         painter.rotate(self.shooter_angle)
-        painter.drawRect(-2, -self.ball_size // 2, 100, self.ball_size//2) # эту шляпу надо покадрить
+        painter.drawRect(-100, -self.ball_size // 4, 100, self.ball_size // 2)
+ # эту шляпу надо покадрить
         painter.restore()
         # if self.current_ball is not None:
         #     painter.setBrush(QBrush(QColor(self.current_ball[2])))
@@ -106,7 +107,7 @@ class GameWindow(QMainWindow):
     # Рассчитываем угол относительно центра стрелы и курсора мыши
         dx = event.x() - (self.width() // 2)
         dy = event.y() - (self.height() - self.ball_size)
-        self.shooter_angle = math.degrees(math.atan2(-dy, dx))  # Угол поворота должен быть отрицательным по оси Y
+        self.shooter_angle = math.degrees(math.atan2(-dy, -dx))  # во ;;;;;
 
         # Обновляем окно для отрисовки нового угла стрелы
         self.update()
