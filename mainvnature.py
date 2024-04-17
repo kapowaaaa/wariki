@@ -145,7 +145,7 @@ class GameWindow(QMainWindow):
         self.player = QMediaPlayer()
 
         # Загрузка файла: укажите правильный путь к файлу
-        url = QUrl.fromLocalFile("TinyBubbles.mp3")
+        url = QUrl.fromLocalFile("lalala.mp3")
         content = QMediaContent(url)
         self.player.setMedia(content)
 
