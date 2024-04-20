@@ -98,9 +98,9 @@ class GameWindow(QMainWindow):
         painter.drawRect(-100, -self.ball_size // 4, 100, self.ball_size // 2)
  # эту шляпу надо покадрить
         painter.restore()
-        # if self.current_ball is not None:
-        #     painter.setBrush(QBrush(QColor(self.current_ball[2])))
-        #     painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
+        if self.current_ball is not None:
+            painter.setBrush(QBrush(QColor(self.current_ball[2])))
+            painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
 
 
     def mouseMoveEvent(self, event):
@@ -125,8 +125,8 @@ class GameWindow(QMainWindow):
 
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton : # and self.current_ball is None : 
-            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'blue']
+        if event.button() == Qt.LeftButton : #and self.current_ball is None : 
+            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Green']
             # Угол стрельбы должен быть адаптирован для использования в математических расчётах
             self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
             self.update()
