@@ -28,7 +28,7 @@ class GameWindow(QMainWindow):
         print(screen_width, screen_height)
         self.current_ball = None
         self.shooting_angle = 90
-        self.shooting_power = 10
+        self.shooting_power = 35
         self.setMouseTracking(True)
 
 
@@ -116,7 +116,7 @@ class GameWindow(QMainWindow):
     
     def update_shooting_ball(self):
         if self.current_ball is not None:
-            dx = math.cos(math.radians(self.shooting_angle)) * self.shooting_power
+            dx = math.cos(math.radians(self.shooting_angle - 180)) * self.shooting_power
             dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
             self.current_ball[0] += dx
             self.current_ball[1] -= dy
@@ -190,7 +190,12 @@ class StartWindow(QMainWindow):
         game_name.setAlignment(Qt.AlignCenter)
         game_name.setStyleSheet('background: transparent;font: 72pt "Century Schoolbook";')
         
-        
+    def keyPressEvent(self, event):
+        # Объединяем обработку нажатий клавиш
+        if event.key() == Qt.Key_Escape:
+            self.close()
+        elif event.key() == Qt.Key_Space:
+            self.start_game()        
          
         
     def start_game(self):
