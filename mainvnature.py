@@ -37,7 +37,7 @@ class GameWindow(QMainWindow):
 
         total_rows = 8
         column = 25
-        balls_field = []
+        self.balls_field = []
 
         self.x_pos = 0
         self.y_pos = 0
@@ -53,10 +53,10 @@ class GameWindow(QMainWindow):
                 # color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
                 color = random.choice(['red', 'green', 'blue'])  # Randomly choose red, green, or blue
                 ball = [self.x_pos, self.y_pos, color] #хз тут было cell
-                balls_field.append(ball)
+                self.balls_field.append(ball)
                 self.x_pos += self.ball_size
             if (i + 1) % 2 == 0:  # Проверяем, является ли i+1 последним элементом с четным индексом
-                balls_field.pop()  # Удаляем последний элемент из списка balls_field
+                self.balls_field.pop()  # Удаляем последний элемент из списка balls_field
 
             self.y_pos += round(self.ball_size / 1.15)
 
@@ -64,7 +64,7 @@ class GameWindow(QMainWindow):
         # self.game_field.setGeometry(0, 0, column * self.ball_size, total_rows * self.ball_size)
         
         # #создание поля с шариками
-        for ball in balls_field:
+        for ball in self.balls_field:
             
             self.x_pos, self.y_pos, color = ball
             ball_label = QLabel(self)
@@ -127,12 +127,27 @@ class GameWindow(QMainWindow):
             if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
                 self.shooting_angle = -self.shooting_angle
                 
+            if self.check_collision():
+                self.attach_ball()
+                
             self.update()
+            
+            
+    def check_collision(self):
+        for ball in self.balls_field:
+            distance = math.sqrt((self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
+            if distance < self.ball_size:
+                return True
+        return False
+
+    def attach_ball(self):
+        self.balls_field.append(self.current_ball)
+        self.current_ball = None
 
 
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton : #and self.current_ball is None : 
+        if event.button() == Qt.LeftButton and self.current_ball is None : 
             self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Green']
             # Угол стрельбы должен быть адаптирован для использования в математических расчётах
             self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
@@ -166,6 +181,7 @@ class GameWindow(QMainWindow):
         # Проверка, завершилось ли воспроизведение
         if status == QMediaPlayer.EndOfMedia:
             self.player.play()
+            
     
 
 
