@@ -80,7 +80,7 @@ class GameWindow(QMainWindow):
         self.shooter_angle = 270 # уголлл
 
         self.shooter = QLabel(self)
-        self.shooter.setGeometry(screen_width // 2 - self.ball_size // 2 - 10, screen_height - self.ball_size*1.5,  # серая херня снизу
+        self.shooter.setGeometry(int(screen_width // 2 - self.ball_size // 2 - 10), int(screen_height - self.ball_size*1.5),  # серая херня снизу
                                  100,
                                  100)
         self.shooter.setStyleSheet("background-color: gray; border-radius: 50px; border: 1px solid black;") # настройка цвета и формы серой херни
@@ -100,7 +100,7 @@ class GameWindow(QMainWindow):
         painter.restore()
         if self.current_ball is not None:
             painter.setBrush(QBrush(QColor(self.current_ball[2])))
-            painter.drawEllipse(self.current_ball[0], self.current_ball[1], self.ball_size, self.ball_size)
+            painter.drawEllipse(int(self.current_ball[0]), int(self.current_ball[1]), int(self.ball_size), int(self.ball_size))
 
 
     def mouseMoveEvent(self, event):
@@ -111,8 +111,6 @@ class GameWindow(QMainWindow):
 
         # Обновляем окно для отрисовки нового угла стрелы
         self.update()
-        print(f"Mouse move: {event.pos()}")
-        print(event.x(), event.y())
     
     def update_shooting_ball(self):
         if self.current_ball is not None:
