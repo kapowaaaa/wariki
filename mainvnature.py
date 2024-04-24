@@ -159,6 +159,7 @@ class GameWindow(QMainWindow):
         # Проверка, завершилось ли воспроизведение
         if status == QMediaPlayer.EndOfMedia:
             self.player.play()
+    
 
 
 class StartWindow(QMainWindow):
