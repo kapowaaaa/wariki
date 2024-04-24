@@ -118,6 +118,15 @@ class GameWindow(QMainWindow):
             dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
             self.current_ball[0] += dx
             self.current_ball[1] -= dy
+            # Проверяем столкновение с границами экрана
+        # Если шарик выходит за границы по горизонтали
+            if self.current_ball[0] <= 0 or self.current_ball[0] + self.ball_size >= screen_width:
+                self.shooting_angle = 180 - self.shooting_angle
+
+            # Если шарик выходит за границы по вертикали
+            if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
+                self.shooting_angle = -self.shooting_angle
+                
             self.update()
 
 
