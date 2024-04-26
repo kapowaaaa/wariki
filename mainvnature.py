@@ -160,6 +160,7 @@ class GameWindow(QMainWindow):
         if event.key() == Qt.Key_Escape:
             self.close()
         elif event.key() == Qt.Key_Space:
+            print('hello world')
             self.update_shooting_ball()
 
     def setupMediaPlayer(self):
