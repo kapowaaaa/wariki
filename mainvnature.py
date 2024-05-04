@@ -93,10 +93,9 @@ class GameWindow(QMainWindow):
         painter.setBrush(QBrush(Qt.black))
         painter.save()
         painter.translate(self.width() //2,
-                         self.height() - self.ball_size // 2) #и эту
+                         self.height() - self.ball_size // 2)
         painter.rotate(self.shooter_angle)
         painter.drawRect(-100, -self.ball_size // 4, 100, self.ball_size // 2)
- # эту шляпу надо покадрить
         painter.restore()
         if self.current_ball is not None:
             painter.setBrush(QBrush(QColor(self.current_ball[2])))
@@ -110,8 +109,9 @@ class GameWindow(QMainWindow):
         self.shooter_angle = math.degrees(math.atan2(-dy, -dx))  # во ;;;;;
 
         # Обновляем окно для отрисовки нового угла стрелы
-        self.update()
     
+        self.update_shooting_ball()
+        self.update()
     def update_shooting_ball(self):
         if self.current_ball is not None:
             dx = math.cos(math.radians(self.shooting_angle - 180)) * self.shooting_power
@@ -143,7 +143,7 @@ class GameWindow(QMainWindow):
     def attach_ball(self):
         self.balls_field.append(self.current_ball)
         self.current_ball = None
-
+        self.update()
 
 
     def mousePressEvent(self, event):
@@ -160,7 +160,6 @@ class GameWindow(QMainWindow):
         if event.key() == Qt.Key_Escape:
             self.close()
         elif event.key() == Qt.Key_Space:
-            print('hello world')
             self.update_shooting_ball()
 
     def setupMediaPlayer(self):
