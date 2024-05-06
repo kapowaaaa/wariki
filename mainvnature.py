@@ -4,7 +4,7 @@ from PyQt5.QtGui import QColor, QPainter, QBrush
 from PyQt5.QtCore import Qt,QUrl
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
-
+import time
 import random
 import math
 
@@ -118,19 +118,20 @@ class GameWindow(QMainWindow):
             dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
             self.current_ball[0] += dx
             self.current_ball[1] -= dy
-            # Проверяем столкновение с границами экрана
-        # Если шарик выходит за границы по горизонтали
-            if self.current_ball[0] <= 0 or self.current_ball[0] + self.ball_size >= screen_width:
+
+            # Обновляем координаты шарика перед проверкой столкновений
+            ball_x, ball_y, _ = self.current_ball
+            if ball_x <= 0 or ball_x + self.ball_size >= screen_width:
                 self.shooting_angle = 180 - self.shooting_angle
 
-            # Если шарик выходит за границы по вертикали
-            if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
+            if ball_y <= 0 or ball_y + self.ball_size >= screen_height:
                 self.shooting_angle = -self.shooting_angle
-                
+            
             if self.check_collision():
                 self.attach_ball()
-                
+
             self.update()
+
             
             
     def check_collision(self):

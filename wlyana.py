@@ -1,70 +1,28 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt5.QtGui import QColor, QPainter, QBrush
-from PyQt5.QtCore import Qt
-import random
+def mousePressEvent(self, event):
+    if event.button() == Qt.LeftButton and self.current_ball is None:
+        self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Green']
+        self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
+        self.timer = self.startTimer(50)  # Запускаем таймер для обновления положения шарика
 
-row = 5
-column = 11
-balls_field = []
-x = 0
-y = 0
-cell_diameter =120
+def timerEvent(self, event):
+    if self.current_ball is not None:
+        dx = math.cos(math.radians(self.shooting_angle - 180)) * self.shooting_power
+        dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
+        self.current_ball[0] += dx
+        self.current_ball[1] -= dy
 
-for i in range(row):
-    row_list = []
-    for j in range(column):
-        color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])  # Randomly choose red, green, or blue
-        cell = [x, y, color]
-        x += cell_diameter
-        row_list.append(cell)
-    balls_field.append(row_list)
-    x = 0
-    y += cell_diameter
+        ball_x, ball_y, _ = self.current_ball
+        if ball_x <= 0 or ball_x + self.ball_size >= screen_width:
+            self.shooting_angle = 180 - self.shooting_angle
+        if ball_y <= 0 or ball_y + self.ball_size >= screen_height:
+            self.shooting_angle = -self.shooting_angle
 
-class GameWindow(QMainWindow):
-    def __init__(self, row):
-        super().__init__()
+        if self.check_collision():
+            self.attach_ball()
+            self.killTimer(self.timer)  # Останавливаем таймер после столкновения
+            self.timer = None
 
-        self.row = row
-        self.shooter_angle = -45
-
-        self.setWindowTitle("Bubble Shooter Game")
-        self.setGeometry(0, 0, 1920, 1080)
-
-        self.game_field = QLabel(self)
-        self.game_field.setGeometry(50, 50, column*cell_diameter, self.row*cell_diameter)
-        self.game_field.setStyleSheet("background-color: white; border: 1px solid black;")
-
-        for row in balls_field:
-            for cell in row:
-                x, y, color = cell
-                ball_label = QLabel(self.game_field)
-                ball_label.setGeometry(x, y, cell_diameter, cell_diameter)
-                ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {cell_diameter//2}px; border: 1px solid black;")
-                ball_label.color = color
-
-        self.shooter = QLabel(self)
-        self.shooter.setGeometry(960 - cell_diameter // 2, 930 - cell_diameter // 2, cell_diameter, cell_diameter)
-        self.shooter.setStyleSheet("background-color: gray; border-radius: 45px; border: 1px solid black;")
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setPen(Qt.black)
-        painter.setBrush(QBrush(Qt.gray))
-        painter.drawRect(960 - cell_diameter // 4, 930 - cell_diameter // 4, cell_diameter // 2, cell_diameter)
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            # Shoot a random color ball from the shooter
-            color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255)])
-            ball_label = QLabel(self.game_field)
-            ball_label.setGeometry(960 - cell_diameter // 2, 930 - cell_diameter // 2, cell_diameter, cell_diameter)
-            ball_label.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]}); border-radius: {cell_diameter//2}px; border: 1px solid black;")
-            ball_label.color = color
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = GameWindow(row)
-    window.show()
-    sys.exit(app.exec_())
+        self.update()  # Обновляем окно для отрисовки нового положения шарика
+        
+        
+'Можно добавить это чтобы шарик двигался без движения мышки'
