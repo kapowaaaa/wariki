@@ -1,8 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QWidget
 from PyQt5.QtGui import QColor, QPainter, QBrush
-from PyQt5.QtCore import Qt,QUrl
+from PyQt5.QtCore import Qt,QUrl,QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+
 
 
 import random
@@ -110,7 +111,7 @@ class GameWindow(QMainWindow):
 
         # Обновляем окно для отрисовки нового угла стрелы
     
-        self.update_shooting_ball()
+        # self.update_shooting_ball()
         self.update()
     def update_shooting_ball(self):
         if self.current_ball is not None:
@@ -127,8 +128,19 @@ class GameWindow(QMainWindow):
             if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
                 self.shooting_angle = -self.shooting_angle
                 
-            if self.check_collision():
-                self.attach_ball()
+            for ball in list(self.balls_field):
+                distance = math.sqrt((self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
+                if distance <= self.ball_size:                    
+                    if self.current_ball[2] == ball[2]:
+                        print('destroy!')
+                        self.current_ball = None
+                    else:
+                        self.balls_field.append(self.current_ball)
+                        print('append')
+                        self.current_ball = None
+            
+            # if self.check_collision():
+            #     self.attach_ball()
                 
             self.update()
             
@@ -148,9 +160,13 @@ class GameWindow(QMainWindow):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton and self.current_ball is None : 
-            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Green']
+            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Blue']
             # Угол стрельбы должен быть адаптирован для использования в математических расчётах
             self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
+            
+            self.timer = QTimer()
+            self.timer.timeout.connect(self.update_shooting_ball)
+            self.timer.start(10)
             self.update()
     
     
