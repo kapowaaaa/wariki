@@ -136,7 +136,7 @@ class GameWindow(QMainWindow):
                         self.current_ball = None
                     else:
                         self.balls_field.append(self.current_ball)
-                        print('append')
+                        print('append!')
                         self.current_ball = None
             
             # if self.check_collision():
