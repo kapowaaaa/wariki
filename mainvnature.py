@@ -128,16 +128,18 @@ class GameWindow(QMainWindow):
             if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
                 self.shooting_angle = -self.shooting_angle
                 
-            for ball in list(self.balls_field):
+            for ball in self.balls_field:
                 distance = math.sqrt((self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
-                if distance <= self.ball_size:                    
+                print(distance)
+                if distance < self.ball_size:                    
                     if self.current_ball[2] == ball[2]:
                         print('destroy!')
-                        self.current_ball = None
+                        # self.current_ball.clear()
                     else:
                         self.balls_field.append(self.current_ball)
                         print('append!')
-                        self.current_ball = None
+                        self.attach_ball()
+                        # self.current_ball = []
             
             # if self.check_collision():
             #     self.attach_ball()
@@ -154,7 +156,8 @@ class GameWindow(QMainWindow):
 
     def attach_ball(self):
         self.balls_field.append(self.current_ball)
-        self.current_ball = None
+        print('+++')
+        self.current_ball.update()
         self.update()
 
 
@@ -183,7 +186,7 @@ class GameWindow(QMainWindow):
         self.player = QMediaPlayer()
 
         # Загрузка файла: укажите правильный путь к файлу
-        url = QUrl.fromLocalFile("TinyBubbles.mp3")
+        url = QUrl.fromLocalFile("lalala.mp3")
         content = QMediaContent(url)
         self.player.setMedia(content)
 
