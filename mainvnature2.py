@@ -142,6 +142,7 @@ class GameWindow(QMainWindow):
                     # тут функция удаления
                     self.timer.stop()
                     self.current_ball = None
+                    self.remove_ball(ball)
                     break
                 else:
                     print(f'{self.current_ball[2]} != {ball[2]}')
@@ -152,8 +153,23 @@ class GameWindow(QMainWindow):
                     break
 
     def attach_ball(self):
+        # Добавляем текущий шарик на игровое поле
         self.balls_field.append(self.current_ball)
-        self.update()
+        ball_label = QLabel(self)
+        ball_label.setGeometry(int(self.current_ball[0]), int(self.current_ball[1]), self.ball_size, self.ball_size)
+        ball_label.setMouseTracking(True)
+        ball_label.setStyleSheet(f"background-color: {self.current_ball[2]}; "
+                                 f"border-radius: {self.ball_size // 2}px; "
+                                 f"border: 1px solid black;")
+        ball_label.show()
+        
+    def remove_ball(self, ball):
+        self.balls_field.remove(ball)
+        # Находим соответствующий QLabel и удаляем его
+        for widget in self.findChildren(QLabel):
+            if widget.geometry().x() == ball[0] and widget.geometry().y() == ball[1]:
+                widget.hide()
+                break
 
     def keyPressEvent(self, event):
         # Объединяем обработку нажатий клавиш
