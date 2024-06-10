@@ -213,27 +213,24 @@ class StartWindow(QMainWindow):
         self.setWindowTitle("Шарики")
         self.setGeometry(0, 0, screen_width, screen_height)
         self.setStyleSheet(
-            'background-color: qlineargradient(spread:reflect, x1:0.506, y1:0.476142, x2:0.506, y2:1, stop:0.0189474 '
-            'rgba(0, 255, 191, 255), stop:0.76 rgba(0, 137, 123, 255), stop:1 rgba(15, 56, 116, 255));')
+            'background-color: qlineargradient(spread:pad, x1:0.767, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 47, 255), stop:1 rgba(21, 21, 21, 255))')
 
         start_button = QPushButton("Начать игру", self)
         start_button.setGeometry(screen_width // 2 - 50, screen_height // 2 + 200, 200, 100)
         start_button.clicked.connect(self.start_game)
         start_button.setStyleSheet(
-            'background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, '
-            '255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;')
+            'background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.494318, y2:0.926, stop:0 rgba(0, 0, 214, 255), stop:0.897727 rgba(24, 15, 122, 255));font: 75 18pt "Century Schoolbook";border-radius : 50;color: rgb(255, 255, 255);')
 
         exit_button = QPushButton("Выйти", self)
         exit_button.setGeometry(0, 0, 150, 50)
         exit_button.clicked.connect(self.close)
         exit_button.setStyleSheet(
-            'background-color: qlineargradient(spread:pad, x1:0.512, y1:0, x2:0.517, y2:1, stop:0.00568182 rgba(238, '
-            '255, 129, 255), stop:1 rgba(138, 255, 166, 255));font: 75 18pt "Century Schoolbook";border-radius : 25; ')
+            'background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.494318, y2:0.926, stop:0 rgba(0, 0, 214, 255), stop:0.897727 rgba(24, 15, 122, 255)) ;font: 75 18pt "Century Schoolbook";border-radius : 25;color: rgb(255, 255, 255); ')
 
         game_name = QLabel('Шарики', self)
         game_name.setGeometry(screen_width // 2 - 200, screen_height // 2 - 400, 500, 150)
         game_name.setAlignment(Qt.AlignCenter)
-        game_name.setStyleSheet('background: transparent;font: 72pt "Century Schoolbook";')
+        game_name.setStyleSheet('background: transparent;font: 72pt "Century Schoolbook";color: rgb(255, 255, 255);')
 
     def keyPressEvent(self, event):
         # Объединяем обработку нажатий клавиш
