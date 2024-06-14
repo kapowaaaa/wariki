@@ -22,6 +22,8 @@ class GameWindow(QMainWindow):
         screen_geometry = QApplication.desktop().availableGeometry()  # доп шняга добавлена теперь растянуто норм
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
         self.setupMediaPlayer()
+        self.timer_num = 0
+        self.num_step = 0
 
         global screen_width, screen_height
         screen_width = self.size().width()
@@ -31,25 +33,27 @@ class GameWindow(QMainWindow):
         self.shooting_angle = 90  # угол шара
         self.shooting_power = 15  # по сути - это шаг, с которым передвигается стреляющий шар
         self.setMouseTracking(True)
+        self.can_checking = True
 
         self.setWindowTitle("Шарики")
 
         total_rows = 8
-        column = 25
+        self.column = 25
         self.balls_field = []
 
         self.x_pos = 0
         self.y_pos = 0
-        self.ball_size = min(screen_width // column, screen_width // column)
+        self.ball_size = min(screen_width // self.column, screen_width // self.column)
+        print(self.ball_size)
 
         for i in range(total_rows):
             if i % 2 == 0:
                 self.x_pos = 0
             else:
                 self.x_pos = self.ball_size // 2
-            for j in range(column):
+            for j in range(self.column):
                 color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])  # Randomly choose red, green, or blue
-                ball = [self.x_pos, self.y_pos, color]
+                ball = [self.x_pos, self.y_pos, color, QLabel(self)]
                 self.balls_field.append(ball)
                 self.x_pos += self.ball_size
             if (i + 1) % 2 == 0:  # Проверяем, является ли i+1 последним элементом с четным индексом
@@ -58,22 +62,29 @@ class GameWindow(QMainWindow):
             self.y_pos += round(self.ball_size / 1.15)
 
         for ball in self.balls_field:
-            self.x_pos, self.y_pos, color = ball
-            ball_label = QLabel(self)
+            self.x_pos, self.y_pos, color, ball_label = ball
             ball_label.setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
             ball_label.setMouseTracking(True)
             ball_label.setStyleSheet(f"background-color: {ball[2]}; "
                                      f"border-radius: {self.ball_size // 2}px; "
                                      f"border: 1px solid black;")
         self.row = total_rows
+        self.shooter_color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])
         self.shooter = QLabel(self)
         self.shooter.setGeometry(int(screen_width // 2 - self.ball_size // 2 - 10),
                                  int(screen_height - self.ball_size * 1.5), 100, 100)  # серый кружок снизу
-        self.shooter.setStyleSheet("background-color: gray; "
+        self.shooter.setStyleSheet(f"background-color: {self.shooter_color}; "
                                    "border-radius: 50px; "
                                    "border: 1px solid black;")  # настройка цвета и формы серого кружка
+        self.score = 0
+        self.score_label = QLabel('Очки: 0',self)
+        self.score_label.setGeometry(0, screen_height - 100, 400, 100)
+        self.score_label.setStyleSheet('background: transparent;font: 32pt "Century Schoolbook";color: rgb(0, 0, 0);')
 
     def paintEvent(self, event):  # пушка-дуло-пулемет
+        self.shooter.setStyleSheet(f"background-color: {self.shooter_color}; "
+                                   "border-radius: 50px; "
+                                   "border: 1px solid black;")
         painter = QPainter(self)
         painter.setPen(Qt.black)
         painter.setBrush(QBrush(Qt.black))
@@ -100,15 +111,18 @@ class GameWindow(QMainWindow):
             self.start_shooting()
 
     def start_shooting(self):
-        self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, get_random_color()]
-        self.shooting_angle = shooter_angle
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_shooting_ball)
-        self.timer.start(1)  # время паузы между шагами (в миллисекундах)
-        self.update()
+        if self.current_ball == None:
+            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, self.shooter_color]
+            self.shooter_color = get_random_color()
+            self.shooting_angle = shooter_angle
+            self.timer = QTimer()
+            self.timer.timeout.connect(self.update_shooting_ball)
+            self.timer.start(1)  # время паузы между шагами (в миллисекундах)
+            self.update()
 
     def update_shooting_ball(self):
-        if self.current_ball is not None:
+        if self.current_ball is not None and self.can_checking:
+            #self.can_checking = False
             dx = math.cos(math.radians(self.shooting_angle)) * self.shooting_power
             dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
             self.current_ball[0] -= dx
@@ -119,15 +133,104 @@ class GameWindow(QMainWindow):
                 self.shooting_angle = 180 - self.shooting_angle
             if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
                 self.shooting_angle = -self.shooting_angle
-
-            self.check_collision()
+            self.check_collision_new()
             self.update()
+            self.can_checking = True
 
+    def check_collision_new(self):
+        min_ball = None
+        min_dist = 0
+        for ball in self.balls_field:
+            distance = math.sqrt(
+                (self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
+            if min_ball == None or distance<min_dist:
+                min_ball = ball
+                min_dist = distance
+        if min_dist < self.ball_size and min_ball != None:
+            if self.current_ball[1] - min_ball[1] > 0:
+                new_pos_y = min_ball[1]+math.sin(math.radians(60))*self.ball_size
+                if self.current_ball[0] - min_ball[0] > 0:
+                    new_pos_x = min_ball[0]+math.cos(math.radians(60))*self.ball_size
+                else:
+                    new_pos_x = min_ball[0]-math.cos(math.radians(60))*self.ball_size
+            else:
+                new_pos_y = min_ball[1]-math.sin(math.radians(60))*self.ball_size
+                if self.current_ball[0] - min_ball[0] > 0:
+                    new_pos_x = min_ball[0]+math.cos(math.radians(60))*self.ball_size
+                else:
+                    new_pos_x = min_ball[0]-math.cos(math.radians(60))*self.ball_size
+            self.current_ball[0] = new_pos_x
+            self.current_ball[1] = new_pos_y
+            if (self.check_remove()):
+                print('destroy!')
+                self.score_label.setText('Очки: '+str(self.score))
+                self.timer.stop()
+                self.current_ball = None
+            else:
+                print('append!')
+                self.attach_ball()
+                self.timer.stop()
+                self.current_ball = None
+            self.num_step += 1
+            if self.num_step%10 == 0:
+                for ball in self.balls_field:
+                    ball[1] += round(self.ball_size / 1.15)
+                    ball[3].hide()
+                    ball[3] = QLabel(self)
+                    ball[3].setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
+                    ball[3].setMouseTracking(True)
+                    ball[3].setStyleSheet(f"background-color: {ball[2]}; "
+                                     f"border-radius: {self.ball_size // 2}px; "
+                                     f"border: 1px solid black;")
+                    ball[3].show()
+                tmp = self.num_step // 10
+                if tmp%2 == 0:
+                    new_x_pos = 0
+                    num_ball = self.column
+                else:
+                    new_x_pos = self.ball_size // 2
+                    num_ball = self.column - 1
+                new_y_pos = 0
+                for i in range(num_ball):
+                    color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])  # Randomly choose red, green, or blue
+                    ball = [int(new_x_pos), int(new_y_pos), color, QLabel(self)]
+                    ball[3].setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
+                    ball[3].setMouseTracking(True)
+                    ball[3].setStyleSheet(f"background-color: {ball[2]}; "
+                                     f"border-radius: {self.ball_size // 2}px; "
+                                     f"border: 1px solid black;")
+                    ball[3].show()
+                    self.balls_field.append(ball)
+                    new_x_pos += self.ball_size
+                
+    def check_remove(self):
+        mylen = 1
+        balls_to_remove = []
+        balls_to_remove.append(self.current_ball)
+        i = 0
+        while i < mylen:
+            for ball in self.balls_field:
+                distance = math.sqrt(
+                    (balls_to_remove[i][0] - ball[0]) ** 2 + (balls_to_remove[i][1] - ball[1]) ** 2)
+                if distance < self.ball_size*1.1 and ball[2] == balls_to_remove[i][2] and ball not in balls_to_remove:
+                    balls_to_remove.append(ball)
+                    mylen += 1
+            i += 1
+        balls_to_remove.remove(self.current_ball)
+        if mylen > 1:
+            print(balls_to_remove)
+            for ball in balls_to_remove:
+                self.remove_ball(ball)
+            new_balls = []
+            return True
+        else:
+            return False
+    
     def check_collision(self):
         for ball in self.balls_field:
             distance = math.sqrt(
-                (round(self.current_ball[0]) - ball[0]) ** 2 + (round(self.current_ball[1]) - ball[1]) ** 2)
-            if round(distance) < self.ball_size / 2:
+                (self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
+            if round(distance) < self.ball_size:
                 if self.current_ball[2] == ball[2]:
                     print(f'{self.current_ball[2]} == {ball[2]}')
                     print('destroy!')
@@ -136,29 +239,34 @@ class GameWindow(QMainWindow):
                     self.remove_ball(ball)
                     break
                 else:
+                    if self.current_ball[0] - ball[0] > 0:
+                        new_pos_x = ball[0]+math.cos(math.radians(60))*self.ball_size
+                    else:
+                        new_pos_x = ball[0]-math.cos(math.radians(60))*self.ball_size
+                    new_pos_y = ball[1]+math.sin(math.radians(60))*self.ball_size
                     print(f'{self.current_ball[2]} != {ball[2]}')
                     print('append!')
+                    self.current_ball[0] = new_pos_x;
+                    self.current_ball[1] = new_pos_y;
                     self.attach_ball()
                     self.timer.stop()
                     self.current_ball = None
                     break
 
     def attach_ball(self):
-        self.balls_field.append(self.current_ball)
-        ball_label = QLabel(self)
-        ball_label.setGeometry(int(self.current_ball[0]), int(self.current_ball[1]), self.ball_size, self.ball_size)
-        ball_label.setMouseTracking(True)
-        ball_label.setStyleSheet(f"background-color: {self.current_ball[2]}; "
+        new_ball = [int(self.current_ball[0]), int(self.current_ball[1]), self.current_ball[2], QLabel(self)]
+        self.balls_field.append(new_ball)
+        new_ball[3].setGeometry(new_ball[0], new_ball[1], self.ball_size, self.ball_size)
+        new_ball[3].setMouseTracking(True)
+        new_ball[3].setStyleSheet(f"background-color: {self.current_ball[2]}; "
                                  f"border-radius: {self.ball_size // 2}px; "
                                  f"border: 1px solid black;")
-        ball_label.show()
+        new_ball[3].show()
         
     def remove_ball(self, ball):
+        self.score += 100
         self.balls_field.remove(ball)
-        for widget in self.findChildren(QLabel):
-            if widget.geometry().x() == ball[0] and widget.geometry().y() == ball[1]:
-                widget.hide()
-                break
+        ball[3].hide()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
