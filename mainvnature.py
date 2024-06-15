@@ -163,7 +163,7 @@ class GameWindow(QMainWindow):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton and self.current_ball is None : 
-            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'Blue']
+            self.current_ball = [self.width() // 2 - self.ball_size // 2, self.height() - self.ball_size * 1.5, 'blue']
             # Угол стрельбы должен быть адаптирован для использования в математических расчётах
             self.shooting_angle = self.shooter_angle + 180 if self.shooter_angle < 0 else self.shooter_angle
             
