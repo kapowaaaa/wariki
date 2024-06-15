@@ -25,7 +25,6 @@ class GameWindow(QMainWindow):
         global screen_width, screen_height
         screen_width = self.size().width()
         screen_height = self.size().height()
-        print(screen_width, screen_height)
         self.current_ball = None
         self.shooting_angle = 90
         self.shooting_power = 10
@@ -105,9 +104,6 @@ class GameWindow(QMainWindow):
         self.shooter_angle = math.degrees(math.atan2(-dy, -dx))  # во ;;;;;
 
         # Обновляем окно для отрисовки нового угла стрелы
-        self.update()
-        print(f"Mouse move: {event.pos()}")
-        print(event.x(), event.y())
     
     def update_shooting_ball(self):
         if self.current_ball is not None:

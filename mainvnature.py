@@ -66,7 +66,6 @@ class GameWindow(QMainWindow):
         global screen_width, screen_height
         screen_width = self.size().width()
         screen_height = self.size().height()
-        print(screen_width, screen_height)
         self.current_ball = None
         self.shooting_angle = 90  # угол шара
         self.shooting_power = 15  # по сути - это шаг, с которым передвигается стреляющий шар
@@ -82,7 +81,6 @@ class GameWindow(QMainWindow):
         self.x_pos = 0
         self.y_pos = 0
         self.ball_size = min(screen_width // self.column, screen_width // self.column)
-        print(self.ball_size)
 
         for i in range(total_rows):
             if i % 2 == 0:
@@ -202,7 +200,6 @@ class GameWindow(QMainWindow):
             self.current_ball[0] = new_pos_x
             self.current_ball[1] = new_pos_y
             if (self.check_remove()):
-                print('destroy!')
                 self.score_label.setText('Очки: '+str(self.score))
                 self.timer.stop()
                 self.current_ball = None
@@ -212,7 +209,6 @@ class GameWindow(QMainWindow):
                     self.player.stop()
                     self.endG = EndGame(self.score, 0)
                     self.endG.showMaximized()
-                print('append!')
                 self.attach_ball()
                 self.timer.stop()
                 self.current_ball = None
@@ -269,7 +265,6 @@ class GameWindow(QMainWindow):
             i += 1
         balls_to_remove.remove(self.current_ball)
         if mylen > 2:
-            print(balls_to_remove)
             self.score += 100+100*len(balls_to_remove)
             for ball in balls_to_remove:
                 self.remove_ball(ball)
@@ -317,8 +312,6 @@ class GameWindow(QMainWindow):
                 (self.current_ball[0] - ball[0]) ** 2 + (self.current_ball[1] - ball[1]) ** 2)
             if round(distance) < self.ball_size:
                 if self.current_ball[2] == ball[2]:
-                    print(f'{self.current_ball[2]} == {ball[2]}')
-                    print('destroy!')
                     self.timer.stop()
                     self.current_ball = None
                     self.remove_ball(ball)
@@ -329,8 +322,6 @@ class GameWindow(QMainWindow):
                     else:
                         new_pos_x = ball[0]-math.cos(math.radians(60))*self.ball_size
                     new_pos_y = ball[1]+math.sin(math.radians(60))*self.ball_size
-                    print(f'{self.current_ball[2]} != {ball[2]}')
-                    print('append!')
                     self.current_ball[0] = new_pos_x;
                     self.current_ball[1] = new_pos_y;
                     self.attach_ball()
