@@ -11,7 +11,6 @@ screen_width, screen_height = 0, 0
 shooter_angle = 90
 
 def get_random_color():
-    # Список возможных именованных цветов
     colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink']
     return random.choice(colors)
     
@@ -57,7 +56,7 @@ class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.timer = None
-        screen_geometry = QApplication.desktop().availableGeometry()  # доп шняга добавлена теперь растянуто норм
+        screen_geometry = QApplication.desktop().availableGeometry()
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
         self.setupMediaPlayer()
         self.timer_num = 0
@@ -67,8 +66,8 @@ class GameWindow(QMainWindow):
         screen_width = self.size().width()
         screen_height = self.size().height()
         self.current_ball = None
-        self.shooting_angle = 90  # угол шара
-        self.shooting_power = 15  # по сути - это шаг, с которым передвигается стреляющий шар
+        self.shooting_angle = 90
+        self.shooting_power = 15
         self.setMouseTracking(True)
         self.can_checking = True
 
@@ -88,12 +87,12 @@ class GameWindow(QMainWindow):
             else:
                 self.x_pos = self.ball_size // 2
             for j in range(self.column):
-                color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])  # Randomly choose red, green, or blue
+                color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])
                 ball = [self.x_pos, self.y_pos, color, QLabel(self)]
                 self.balls_field.append(ball)
                 self.x_pos += self.ball_size
-            if (i + 1) % 2 == 0:  # Проверяем, является ли i+1 последним элементом с четным индексом
-                self.balls_field.pop()  # Удаляем последний элемент из списка balls_field
+            if (i + 1) % 2 == 0:
+                self.balls_field.pop()
 
             self.y_pos += round(self.ball_size * math.sin(math.radians(60)))
 
@@ -108,16 +107,16 @@ class GameWindow(QMainWindow):
         self.shooter_color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])
         self.shooter = QLabel(self)
         self.shooter.setGeometry(int(screen_width // 2 - self.ball_size // 2 - 10),
-                                 int(screen_height - self.ball_size * 1.5), 100, 100)  # серый кружок снизу
+                                 int(screen_height - self.ball_size * 1.5), 100, 100)
         self.shooter.setStyleSheet(f"background-color: {self.shooter_color}; "
                                    "border-radius: 50px; "
-                                   "border: 1px solid black;")  # настройка цвета и формы серого кружка
+                                   "border: 1px solid black;")
         self.score = 0
         self.score_label = QLabel('Очки: 0',self)
         self.score_label.setGeometry(0, screen_height - 100, 400, 100)
         self.score_label.setStyleSheet('background: transparent;font: 32pt "Century Schoolbook";color: rgb(0, 0, 0);')
 
-    def paintEvent(self, event):  # пушка-дуло-пулемет
+    def paintEvent(self, event):
         self.shooter.setStyleSheet(f"background-color: {self.shooter_color}; "
                                    "border-radius: 50px; "
                                    "border: 1px solid black;")
@@ -126,7 +125,7 @@ class GameWindow(QMainWindow):
         painter.setBrush(QBrush(Qt.black))
         painter.save()
         painter.translate(self.width() // 2, self.height() - self.ball_size // 2)
-        painter.rotate(1 * shooter_angle - 0)  # 90
+        painter.rotate(1 * shooter_angle - 0)
         painter.drawRect(-100, -self.ball_size // 4, 100, self.ball_size // 2)
         painter.restore()
         if self.current_ball is not None:
@@ -135,7 +134,7 @@ class GameWindow(QMainWindow):
                                 int(self.ball_size))
 
     def mouseMoveEvent(self, event):
-        # Рассчитываем угол относительно центра стрелы и курсора мыши
+        
         global shooter_angle
         dx = event.x() - (self.width() // 2)
         dy = -1 * (event.y() - (self.height()))
@@ -153,18 +152,18 @@ class GameWindow(QMainWindow):
             self.shooting_angle = shooter_angle
             self.timer = QTimer()
             self.timer.timeout.connect(self.update_shooting_ball)
-            self.timer.start(1)  # время паузы между шагами (в миллисекундах)
+            self.timer.start(1)
             self.update()
 
     def update_shooting_ball(self):
         if self.current_ball is not None and self.can_checking:
-            #self.can_checking = False
+            
             dx = math.cos(math.radians(self.shooting_angle)) * self.shooting_power
             dy = math.sin(math.radians(self.shooting_angle)) * self.shooting_power
             self.current_ball[0] -= dx
             self.current_ball[1] -= dy
 
-            # Проверяем столкновение с границами экрана
+
             if self.current_ball[0] <= 0 or self.current_ball[0] + self.ball_size >= screen_width:
                 self.shooting_angle = 180 - self.shooting_angle
             if self.current_ball[1] <= 0 or self.current_ball[1] + self.ball_size >= screen_height:
@@ -238,7 +237,7 @@ class GameWindow(QMainWindow):
                     num_ball = self.column - 1
                 new_y_pos = 0
                 for i in range(num_ball):
-                    color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])  # Randomly choose red, green, or blue
+                    color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink'])
                     ball = [int(new_x_pos), int(new_y_pos), color, QLabel(self)]
                     ball[3].setGeometry(ball[0], ball[1], self.ball_size, self.ball_size)
                     ball[3].setMouseTracking(True)
